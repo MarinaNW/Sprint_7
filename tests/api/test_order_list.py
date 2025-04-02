@@ -1,5 +1,7 @@
+
 from api_methods import ApiMethods
 import allure
+
 
 @allure.title("Тест на возврат списка заказов в тело ответа")
 def test_get_order_list():

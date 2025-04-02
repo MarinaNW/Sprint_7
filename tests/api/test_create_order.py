@@ -1,8 +1,10 @@
+
 from api_methods import ApiMethods
 from helpers import Helper
 from data import Data
 import pytest
 import allure
+
 
 @allure.title("Тесты на создание заказа")
 class TestCreateOrder:
@@ -50,7 +52,8 @@ class TestCreateOrder:
     )
     def test_field_color(self,firstName, lastName, address, metroStation, phone, rentTime, deliveryDate, comment, color):
         response = ApiMethods.create_order(firstName, lastName, address, metroStation, phone, rentTime, deliveryDate, comment, color)
-        assert response.status_code == 201
+        order_number = response.json()['track']
+        assert response.status_code == 201 and order_number is not None
 
     @allure.title("Тест на наличие в теле ответа track")
     def test_track_in_request_response(self):

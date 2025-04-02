@@ -1,0 +1,9 @@
+.idea/
+
+*.pyc
+
+*.pytest_cache/
+
+conftest.py
+
+.idea/.gitignore

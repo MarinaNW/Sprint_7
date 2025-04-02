@@ -4,12 +4,13 @@ from helpers import Helper
 from data import Data
 import pytest
 
+
 @allure.title("Тесты логина курьера")
 class TestLoginCourier:
     @allure.title("Тест на возможность авторизоваться")
     def test_log_courier_true(self):
         response = ApiMethods.login_of_courier(Data.login, Data.password)
-        assert response.status_code == 200
+        assert response.status_code == 200 and response.json()['id'] == Data.id
 
     @allure.title("Тест на необходимость указывать все обязательные поля для авторизации")
     def test_presence_of_required_fields_for_registration_courier(self):
@@ -26,7 +27,7 @@ class TestLoginCourier:
     )
     def test_incorrect_login_or_password(self, login, password):
         response = ApiMethods.login_of_courier(login, password)
-        assert response.status_code == 404
+        assert response.status_code == 404 and response.json()['message'] == "Учетная запись не найдена"
 
 
     @allure.title("Тест на возврат ошибки при отсутствии обязательного поля")
@@ -39,14 +40,14 @@ class TestLoginCourier:
     )
     def test_mandatory_fields_login_and_password(self, login, password):
         response = ApiMethods.login_of_courier(login, password)
-        assert response.status_code == 400
+        assert response.status_code == 400 and response.json()['message'] == "Недостаточно данных для входа"
 
     @allure.title("Тест на авторизацию под несуществующим пользователем")
     def test_login_non_existent_user(self):
         login = Helper.generate_random_string(10)
         password = Helper.generate_random_string(10)
         response = ApiMethods.login_of_courier(login, password)
-        assert response.status_code == 404
+        assert response.status_code == 404 and response.json()['message'] == "Учетная запись не найдена"
 
     @allure.title("Тест на возврат id при успешном запросе")
     def test_login_and_return_id(self):

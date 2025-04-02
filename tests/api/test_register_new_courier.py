@@ -1,8 +1,11 @@
 import allure
+
 from api_methods import ApiMethods
 from helpers import Helper
 from data import Data
 import pytest
+
+
 
 @allure.title("Тесты на создании курьера")
 class TestRegisterCourier:
@@ -23,7 +26,8 @@ class TestRegisterCourier:
         response_one = ApiMethods.register_new_courier(login, password, first_name)
         assert response_one.reason == 'Created'
         response_two = ApiMethods.register_new_courier(login, password, first_name)
-        assert response_two.reason == 'Conflict'
+        assert response_two.reason == 'Conflict' and response_two.json()[
+            'message'] == "Этот логин уже используется. Попробуйте другой."
 
     @allure.title("Тест на обязательность заполнения всех обязательных полей")
     def test_presence_of_required_fields_for_registration_courier(self):
@@ -31,7 +35,7 @@ class TestRegisterCourier:
         password = Helper.generate_random_string(10)
         first_name = Helper.generate_random_string(10)
         response = ApiMethods.register_new_courier_and_return_login_password(login, password, first_name)
-        assert len(response)==3
+        assert len(response) == 3
 
     @allure.title("Тест на возвращение правильного кода ответа")
     def test_status_code(self):
@@ -39,7 +43,7 @@ class TestRegisterCourier:
         password = Helper.generate_random_string(10)
         first_name = Helper.generate_random_string(10)
         response = ApiMethods.register_new_courier(login, password, first_name)
-        assert response.status_code == 201
+        assert response.status_code == 201 and response.json()['ok'] == True
 
     @allure.title("Тест на возвращение корректного тела при успешном запросе")
     def test_answer_true(self):
@@ -57,7 +61,7 @@ class TestRegisterCourier:
             ("", "Helper.generate_random_string(10)", "Helper.generate_random_string(10)"),
         ]
     )
-    def test_successful_registration_with_required_fields(self,login, password,first_name):
+    def test_successful_registration_with_required_fields(self, login, password, first_name):
         response = ApiMethods.register_new_courier(login, password, first_name)
         assert response.json()['message'] == "Недостаточно данных для создания учетной записи"
 
@@ -68,6 +72,3 @@ class TestRegisterCourier:
         assert response_one.reason == 'Created'
         response_two = ApiMethods.register_new_courier(login, Data.password_another, Data.first_name_another)
         assert response_two.json()['message'] == "Этот логин уже используется. Попробуйте другой."
-
-
-        
