@@ -1,6 +1,6 @@
+import allure
 
 from api_methods import ApiMethods
-import allure
 
 
 @allure.title("Тест на возврат списка заказов в тело ответа")

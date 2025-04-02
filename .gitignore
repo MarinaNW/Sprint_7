@@ -4,6 +4,4 @@
 
 *.pytest_cache/
 
-conftest.py
-
 .idea/.gitignore
